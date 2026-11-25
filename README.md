@@ -217,12 +217,19 @@ traria risco de conflito de porta com outros grupos.
 
 ## Estrutura do repositório
 
+Os manifestos de **workload** (Deployment/StatefulSet) e de **exposição**
+(Service) ficam em arquivos separados, para que cada artefato tenha um endereço
+próprio e possa ser lido de forma independente.
+
 ```
 k8s/
-  00-namespace.yaml      namespace poi
-  10-cpu-service.yaml    Deployment (2 réplicas) + Service NodePort 30001
-  20-memory-service.yaml Deployment (1 réplica, Recreate) + Service NodePort 30002
-  30-io-service.yaml     Service headless + StatefulSet + PVC + Service NodePort 30003
+  00-namespace.yaml         namespace poi
+  10-cpu-deployment.yaml    Deployment cpu-service (2 réplicas)
+  11-cpu-service.yaml       Service NodePort 30001
+  20-memory-deployment.yaml Deployment memory-service (1 réplica, Recreate)
+  21-memory-service.yaml    Service NodePort 30002
+  30-io-statefulset.yaml    Service headless + StatefulSet io-service + PVC 1Gi
+  31-io-service.yaml        Service NodePort 30003
 scripts/
   01-infra-openstack.sh  VM, chave, grupo de segurança e Load Balancer
   02-instalar-cluster.sh Docker, kubectl, Minikube e subida do cluster
